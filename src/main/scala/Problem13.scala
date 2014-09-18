@@ -40,16 +40,34 @@ object Collatz {
 	def getMax(ys: List[Int]): Option[Int] = ys match {
 		case Nil 	 => None
 		case x :: xs => { 
-			val result = xs.foldLeft(x: Int){ (acc: List[Int], elem:Int) => if (acc > elem) acc else elem }
+			val result = xs.foldLeft(x: Int){ (acc: Int, elem:Int) => if (acc > elem) acc else elem }
 			Some(result)
 		}
 	}
 
+	type Index = Int
+	
+	/**
+	 * Given a List of tuples (Index, List[Int]), return the optional element (Index, List[Int]) 
+	 * with the longest length list.
+	 */
+	def getMaxWithIndex(ys: List[(Index, List[Int])]): Option[(Index, List[Int])] = ys match {
+		case Nil 	 => None
+		case x :: xs => { 
+			val result = xs.foldLeft(x: (Index, List[Int])){ 
+				(acc: (Index, List[Int]), elem: (Index, List[Int])) => if (acc._2.length > elem._2.length) acc else elem 
+			}
+			Some(result)
+		}
+	}
 
     // Which starting number, under one million, produces the longest chain?
-	def runProblem(n: Int): Option[Int] = {
-		val list1toMil: List[Int] = (0 to 999999).toList
-		val collatzes: List[Int] = list1toMil.map(collatzTailRecursive)
-		getMax(collatzes)
+	def runProblem(): Option[Int] = {
+		val list1toMil: List[(Index,Int)] = (0 to 999999).toList.zip(0 to 999999)
+		val collatzes: List[(Index, List[Int])] = list1toMil.flatMap{x => List((x._1, collatzTailRecursive(x._2)))}
+		getMaxWithIndex(collatzes) match {
+			case None           => None
+			case Some((index, _)) => Some(index)
+		}
 	}
 }
