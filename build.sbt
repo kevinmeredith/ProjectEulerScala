@@ -6,6 +6,8 @@ scalaVersion := "2.11.2"
 
 libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.10.1" % "test"
 
+libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.1.0"
+
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test"
 
 resolvers +=
